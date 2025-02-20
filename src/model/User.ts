@@ -27,7 +27,7 @@ export interface User extends Document {
   verifyCode: string; // Code sent for email verification
   verifyCodeExpiry: Date; // Expiration time of verification code
   isVerified: boolean; // Whether the user is verified or not
-  isAcceptingMessage: boolean; // Whether the user accepts messages or not
+  isAcceptingMessages: boolean; // Whether the user accepts messages or not
   messages: Message[]; // Array of messages associated with the user
 }
 
@@ -61,7 +61,7 @@ const UserSchema: Schema<User> = new Schema({
     type: Boolean,
     default: false, // By default, a new user is not verified
   },
-  isAcceptingMessage: {
+  isAcceptingMessages: {
     type: Boolean,
     default: true, // User accepts messages by default
   },

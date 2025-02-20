@@ -73,7 +73,7 @@ export async function POST(request: Request) {
         verifyCode,
         verifyCodeExpiry: expiryDate,
         isVerified: false, // Default false rakha kyunki email verify nahi hui hai
-        isAcceptingMessage: true, // Messages allow kar raha hai
+        isAcceptingMessages: true, // Messages allow kar raha hai
         messages: [], // Empty array for messages
       });
 
