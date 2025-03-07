@@ -58,7 +58,7 @@ const Page = () => {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue]);
+  }, [setValue , toast]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
@@ -86,7 +86,7 @@ const Page = () => {
         setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages]
+    [setIsLoading, setMessages , toast]
   );
 
   useEffect(() => {

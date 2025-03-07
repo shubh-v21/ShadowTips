@@ -35,6 +35,8 @@ const Page = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    setIsSubmitting(true); // Start loading state
+
     const result = await signIn("credentials", {
       redirect: false,
       identifier: data.identifier,
@@ -51,6 +53,7 @@ const Page = () => {
     if (result?.url) {
       router.replace("/dashboard");
     }
+    setIsSubmitting(false); // Stop loading state
   };
 
   return (

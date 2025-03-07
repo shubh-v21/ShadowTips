@@ -47,7 +47,7 @@ const VerifyAccount = () => {
     } catch (error) {
       console.error("Signup failed");
       const axiosError = error as AxiosError<ApiResponse>;
-      let errorMessage = axiosError.response?.data.message;
+      const errorMessage = axiosError.response?.data.message;
       toast({
         title: "Signup failed",
         description: errorMessage || "An error occurred",
