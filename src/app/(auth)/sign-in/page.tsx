@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import Logo from "@/components/Logo";
 
 const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,10 +58,11 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen bg-slate-900 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-gray-950">
+      <div className="w-full max-w-md p-8 space-y-8 bg-slate-900/80 backdrop-blur-sm rounded-lg border border-cyan-800/40 shadow-lg shadow-cyan-900/20">
         <div className="text-center">
-          <p className="mb-4">Sign in to start your anonymous adventure</p>
+          <Logo size="lg" />
+          <p className="mt-4 mb-4 text-cyan-300">Enter the digital shadows</p>
         </div>
 
         {/* Wrap with FormProvider */}
@@ -71,7 +73,9 @@ const Page = () => {
               name="identifier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email or Username</FormLabel>
+                  <FormLabel className="text-cyan-300">
+                    Email or Username
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Enter username or email" {...field} />
                   </FormControl>
@@ -86,7 +90,7 @@ const Page = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-cyan-300">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -98,11 +102,16 @@ const Page = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              variant="cyberpunk"
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full"
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
+                  Accessing...
                 </>
               ) : (
                 "Sign in"
@@ -112,10 +121,13 @@ const Page = () => {
         </Form>
 
         <div className="text-center mt-4">
-          <p>
-            Create account{" "}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
-              Sign up
+          <p className="text-slate-400">
+            New identity?{" "}
+            <Link
+              href="/sign-up"
+              className="text-cyan-400 hover:text-cyan-300"
+            >
+              Create one
             </Link>
           </p>
         </div>
