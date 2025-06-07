@@ -97,9 +97,10 @@ const SendMessage = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
-      <p className="text-lg font-semibold mb-4">
-        Enter your message for <span className="text-red-600">{username}</span>:
+    <div className="p-6 md:p-8 bg-slate-900/80 rounded-lg shadow-lg border border-cyan-800/40 max-w-lg mx-auto my-8 backdrop-blur-sm">
+      <p className="text-lg font-semibold mb-4 text-cyan-300">
+        Send message to{" "}
+        <span className="text-cyan-400 font-bold">{username}</span>:
       </p>
 
       <Form {...form}>
@@ -110,45 +111,62 @@ const SendMessage = () => {
             render={({ field }) => (
               <FormItem>
                 <Input
-                  placeholder="Write your message here"
+                  placeholder="Write your anonymous message"
                   {...field}
                   disabled={sendLoading}
+                  className="border-cyan-700/40"
                 />
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={sendLoading}>
-            {sendLoading ? "Sending..." : "Send Message"}
+          <Button
+            type="submit"
+            disabled={sendLoading}
+            variant="cyberpunk"
+            className="w-full"
+          >
+            {sendLoading ? "Transmitting..." : "Send Message"}
           </Button>
         </form>
       </Form>
 
       {/* Suggest Messages Button */}
       {disabled ? (
-        <Button className="mt-4 bg-red-500 text-white" disabled>
-          Limit Reached
+        <Button
+          className="mt-4 bg-red-900/30 text-red-300 border border-red-500/50 w-full"
+          disabled
+        >
+          Transmission Limit Reached
         </Button>
       ) : (
-        <Button onClick={greet} className="mt-4" disabled={suggestLoading}>
-          {suggestLoading ? "Loading..." : "Suggest Messages"}
+        <Button
+          onClick={greet}
+          className="mt-4 w-full"
+          disabled={suggestLoading}
+          variant="outline"
+        >
+          {suggestLoading ? "Processing..." : "Generate Suggestions"}
         </Button>
       )}
 
       {/* Suggested Messages */}
-      <div className="border-gray-700 border-solid border-2 rounded-md mt-4 p-3 bg-slate-100">
+      <div className="border-cyan-800/40 border rounded-md mt-4 p-3 bg-slate-800/40">
+        <h3 className="text-cyan-400 mb-2 font-medium">Suggestion Matrix</h3>
         {suggestedMessages.length > 0 ? (
           suggestedMessages.map((message, index) => (
             <div
               key={index}
-              onClick={() => copyToMessageArea(message)} // Pass the clicked message
-              className="border border-gray-400 rounded-md p-2 m-2 bg-white cursor-pointer hover:bg-gray-200 transition"
+              onClick={() => copyToMessageArea(message)}
+              className="border border-cyan-800/30 rounded-md p-2 m-2 bg-slate-900/60 cursor-pointer hover:bg-slate-800/60 transition text-cyan-100 hover:border-cyan-600/50"
             >
               {message}
             </div>
           ))
         ) : (
-          <p className="text-gray-500">No suggestions available.</p>
+          <p className="text-slate-400 px-2 py-1">
+            No suggestions available. Generate some first.
+          </p>
         )}
       </div>
     </div>
