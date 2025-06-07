@@ -10,14 +10,13 @@ import { acceptMessageSchema } from "@/schemas/acceptMessageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { Loader2, RefreshCcw } from "lucide-react";
+import { Loader2, RefreshCcw, Clipboard, Share2 } from "lucide-react";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
-
-  
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const Page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -58,7 +57,7 @@ const Page = () => {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue , toast]);
+  }, [setValue, toast]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
@@ -86,7 +85,7 @@ const Page = () => {
         setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages , toast]
+    [setIsLoading, setMessages, toast]
   );
 
   useEffect(() => {
@@ -146,67 +145,116 @@ const Page = () => {
     );
   }
 
-  
-
-
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-slate-900/80 backdrop-blur-sm rounded-lg border border-cyan-800/40 shadow-lg w-full max-w-6xl">
+      <h1 className="text-4xl font-bold mb-6 text-cyan-300 cyberpunk-glow">
+        Command Terminal
+      </h1>
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={profileUrl}
-            disabled
-            className="input input-bordered w-full p-2 mr-2"
-          />
-          <Button onClick={copyToClipboard}>Copy</Button>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <Switch
-          {...register("acceptMessages")}
-          checked={acceptMessages}
-          onCheckedChange={handleSwitchChange}
-          disabled={isSwitchLoading}
-        />
-        <span className="ml-2">
-          Accept Messages: {acceptMessages ? "On" : "Off"}
-        </span>
-      </div>
-      <Separator />
-
-      <Button
-        className="mt-4"
-        variant="outline"
-        onClick={(e) => {
-          e.preventDefault();
-          fetchMessages(true);
-        }}
-      >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <RefreshCcw className="h-4 w-4" />
-        )}
-      </Button>
-      
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.length > 0 ? (
-          messages.map((message, index) => (
-            <MessageCard
-              key={message._id as string}
-              message={message}
-              onMessageDelete={handleDeleteMessage}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Share2 className="mr-2 text-cyan-400" size={20} />
+            <span>Transmission Link</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center space-x-2">
+            <Input
+              type="text"
+              value={profileUrl}
+              readOnly
+              className="font-mono text-cyan-300 bg-slate-800/60 border-cyan-700/40"
             />
-          ))
-        ) : (
-          <p>No messages to display.</p>
-        )}
+            <Button
+              onClick={copyToClipboard}
+              variant="cyberpunk"
+              className="whitespace-nowrap"
+            >
+              <Clipboard className="mr-2" size={16} />
+              Copy Link
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Message Settings</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center">
+            <Switch
+              {...register("acceptMessages")}
+              checked={acceptMessages}
+              onCheckedChange={handleSwitchChange}
+              disabled={isSwitchLoading}
+              className="data-[state=checked]:bg-cyan-500"
+            />
+            <span className="ml-3 text-cyan-100">
+              Message Reception:{" "}
+              <span
+                className={`font-bold ${
+                  acceptMessages ? "text-emerald-400" : "text-red-400"
+                }`}
+              >
+                {acceptMessages ? "Active" : "Inactive"}
+              </span>
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Separator className="my-6 bg-cyan-800/30" />
+
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-semibold text-cyan-300">
+          Received Transmissions
+        </h2>
+        <Button
+          variant="outline"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchMessages(true);
+          }}
+          className="border-cyan-700/40 text-cyan-300 hover:bg-cyan-900/30"
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              <RefreshCcw className="h-4 w-4 mr-2" />
+              Refresh
+            </>
+          )}
+        </Button>
       </div>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+          <span className="ml-3 text-cyan-300">Scanning transmissions...</span>
+        </div>
+      ) : (
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {messages.length > 0 ? (
+            messages.map((message, index) => (
+              <MessageCard
+                key={message._id as string}
+                message={message}
+                onMessageDelete={handleDeleteMessage}
+              />
+            ))
+          ) : (
+            <div className="col-span-2 text-center py-12 text-cyan-400 bg-slate-800/40 rounded-lg border border-cyan-900/30">
+              <p className="text-lg">No transmissions detected in your network.</p>
+              <p className="text-sm text-cyan-500/70 mt-2">
+                Share your link to receive anonymous messages.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
