@@ -2,6 +2,8 @@
 
 **ShadowTips** is a futuristic anonymous messaging platform built with a cyberpunk aesthetic. It enables users to send and receive anonymous messages through encrypted digital channels while maintaining complete privacy and anonymity.
 
+🔗 **Live Demo**: [https://shadowtips.netlify.app](https://shadowtips.netlify.app)
+
 ### ✨ Core Features
 
 - 🔐 **Anonymous Messaging**: Send messages without revealing your identity
