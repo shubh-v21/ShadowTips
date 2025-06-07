@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "unknown";
   const currentTime = Date.now();
   const LOCK_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
-  const MAX_REQUESTS = 1000;
+  const MAX_REQUESTS = 10;
   
   // Get parameters from request
   const body = await request.json();
