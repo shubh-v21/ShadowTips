@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 const Page = () => {
   const [username, setUsername] = useState("");
@@ -88,13 +89,11 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen bg-slate-900 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-gray-950">
+      <div className="w-full max-w-md p-8 space-y-8 bg-slate-900/80 backdrop-blur-sm rounded-lg border border-cyan-800/40 shadow-lg shadow-cyan-900/20">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join Mystery Message
-          </h1>
-          <p className="mb-4">Sign up to start your anonymous adventure</p>
+          <Logo size="lg" />
+          <p className="mt-4 mb-4 text-cyan-300">Create your digital identity</p>
         </div>
 
         {/* Wrap with FormProvider */}
@@ -105,7 +104,7 @@ const Page = () => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="text-cyan-300">Username</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter username"
@@ -116,9 +115,9 @@ const Page = () => {
                       }}
                     />
                   </FormControl>
-                  {isCheckingUsername && <Loader2 className="animate-spin" />}
+                  {isCheckingUsername && <Loader2 className="animate-spin text-cyan-400" />}
                   <p
-                    className={`text-sm ${usernameMessage === "Username is available" ? "text-green-500" : "text-red-500"}`}
+                    className={`text-sm ${usernameMessage === "Username is available" ? "text-emerald-400" : "text-red-400"}`}
                   >
                     {usernameMessage}
                   </p>
@@ -131,7 +130,7 @@ const Page = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-cyan-300">Email</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter email" {...field} />
                   </FormControl>
@@ -144,7 +143,7 @@ const Page = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-cyan-300">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -156,11 +155,11 @@ const Page = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button variant="cyberpunk" type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
+                  Creating identity...
                 </>
               ) : (
                 "Sign Up"
@@ -170,9 +169,9 @@ const Page = () => {
         </Form>
 
         <div className="text-center mt-4">
-          <p>
-            Already a member?{" "}
-            <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
+          <p className="text-slate-400">
+            Already registered?{" "}
+            <Link href="/sign-in" className="text-cyan-400 hover:text-cyan-300">
               Sign in
             </Link>
           </p>
