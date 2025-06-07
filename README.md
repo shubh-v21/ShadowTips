@@ -210,7 +210,7 @@ We welcome contributions to enhance ShadowTips! Here's how:
 ## 🌟 Acknowledgments
 
 - **Next.js Team** - Amazing React framework
-- **Vercel** - Hosting and deployment platform
+- **Netlify** - Hosting and deployment platform
 - **Radix UI** - Accessible component primitives
 - **Google AI** - Generative AI capabilities
 - **MongoDB** - Flexible database solution
