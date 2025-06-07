@@ -1,5 +1,5 @@
 {
-  "name": "true-feedback",
+  "name": "shadowtips",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,6 +19,7 @@
     "@radix-ui/react-switch": "^1.1.3",
     "@radix-ui/react-toast": "^1.2.6",
     "@react-email/components": "^0.0.33",
+    "@react-email/render": "^1.1.2",
     "ai": "^4.1.41",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.0",
@@ -31,12 +32,12 @@
     "mongoose": "^8.10.0",
     "next": "15.1.7",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
     "openai": "^4.85.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-email": "^3.0.7",
     "react-hook-form": "^7.54.2",
-    "resend": "^4.1.2",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.1",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
