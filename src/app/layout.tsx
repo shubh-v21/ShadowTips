@@ -7,7 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'SHADOWTIPS',
+  title: 'ShadowTips',
   description: 'Digital anonymity protocol for secure communications.',
 };
 

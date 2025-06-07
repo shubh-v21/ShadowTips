@@ -58,7 +58,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="text-center p-4 md:p-6 bg-gray-950 text-cyan-400 border-t border-cyan-900/30">
-        © 2023 SHADOWTIPS. All digital rights secured.
+        © 2025 SHADOWTIPS. All digital rights secured.
       </footer>
     </>
   );

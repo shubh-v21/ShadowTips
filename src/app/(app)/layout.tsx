@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SHADOWTIPS",
+  title: "ShadowTips",
   description: "Digital anonymity protocol for secure communications.",
 };
 
