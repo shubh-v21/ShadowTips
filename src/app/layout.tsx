@@ -7,8 +7,8 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ShadowTips',
-  description: 'Real feedback from real people.',
+  title: 'SHADOWTIPS',
+  description: 'Digital anonymity protocol for secure communications.',
 };
 
 interface RootLayoutProps {
@@ -17,9 +17,9 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" >
+    <html lang="en" className="dark">
       <AuthProvider>
-        <body className={inter.className}>
+        <body className={`${inter.className} bg-slate-900`}>
           {children}
           <Toaster />
         </body>
