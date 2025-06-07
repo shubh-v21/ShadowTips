@@ -12,6 +12,12 @@ import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import MessageGeneratorParams, {
+  MessageTone,
+  MessageTopic,
+  MessageNiche,
+} from "@/components/MessageGeneratorParams";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 
 const SendMessage = () => {
   const { username } = useParams<{ username: string }>();
@@ -20,6 +26,12 @@ const SendMessage = () => {
   const [sendLoading, setSendLoading] = useState(false);
   const [suggestLoading, setSuggestLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
+
+  // New state for message generation parameters
+  const [tone, setTone] = useState<MessageTone>("neutral");
+  const [topic, setTopic] = useState<MessageTopic>("digital");
+  const [niche, setNiche] = useState<MessageNiche>("digital-identity");
+  const [showParams, setShowParams] = useState(false);
 
   useEffect(() => {
     const disabledUntil = localStorage.getItem("buttonDisabledUntil");
@@ -64,8 +76,12 @@ const SendMessage = () => {
   const greet = useCallback(async () => {
     try {
       setSuggestLoading(true);
-      const response = await axios.post("/api/suggest-messages");
-      console.log(response);
+      const response = await axios.post("/api/suggest-messages", {
+        tone,
+        topic,
+        niche,
+        recipient: username,
+      });
 
       const message = response.data.message;
       const messageArray = message.split("||");
@@ -90,7 +106,7 @@ const SendMessage = () => {
     } finally {
       setSuggestLoading(false);
     }
-  }, []);
+  }, [tone, topic, niche, username, toast]);
 
   const copyToMessageArea = (message: string) => {
     form.setValue("content", message); // Set clicked message in the input field
@@ -131,43 +147,83 @@ const SendMessage = () => {
         </form>
       </Form>
 
-      {/* Suggest Messages Button */}
-      {disabled ? (
-        <Button
-          className="mt-4 bg-red-900/30 text-red-300 border border-red-500/50 w-full"
-          disabled
-        >
-          Transmission Limit Reached
-        </Button>
-      ) : (
-        <Button
-          onClick={greet}
-          className="mt-4 w-full"
-          disabled={suggestLoading}
-          variant="outline"
-        >
-          {suggestLoading ? "Processing..." : "Generate Suggestions"}
-        </Button>
-      )}
+      <div className="mt-6 border-t border-cyan-800/30 pt-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-cyan-300 font-medium">Message Generator</h3>
+          <button
+            onClick={() => setShowParams(!showParams)}
+            className="text-xs flex items-center text-cyan-400 hover:text-cyan-300"
+          >
+            {showParams ? (
+              <>Configure <ChevronUp size={14} className="ml-1" /></>
+            ) : (
+              <>Configure <ChevronDown size={14} className="ml-1" /></>
+            )}
+          </button>
+        </div>
 
-      {/* Suggested Messages */}
-      <div className="border-cyan-800/40 border rounded-md mt-4 p-3 bg-slate-800/40">
-        <h3 className="text-cyan-400 mb-2 font-medium">Suggestion Matrix</h3>
-        {suggestedMessages.length > 0 ? (
-          suggestedMessages.map((message, index) => (
-            <div
-              key={index}
-              onClick={() => copyToMessageArea(message)}
-              className="border border-cyan-800/30 rounded-md p-2 m-2 bg-slate-900/60 cursor-pointer hover:bg-slate-800/60 transition text-cyan-100 hover:border-cyan-600/50"
-            >
-              {message}
-            </div>
-          ))
+        {/* Message Generator Parameters */}
+        <MessageGeneratorParams
+          tone={tone}
+          setTone={setTone}
+          topic={topic}
+          setTopic={setTopic}
+          niche={niche}
+          setNiche={setNiche}
+          showParams={showParams}
+          setShowParams={setShowParams}
+        />
+
+        {/* Suggest Messages Button */}
+        {disabled ? (
+          <Button
+            className="mb-4 bg-red-900/30 text-red-300 border border-red-500/50 w-full"
+            disabled
+          >
+            Transmission Limit Reached
+          </Button>
         ) : (
-          <p className="text-slate-400 px-2 py-1">
-            No suggestions available. Generate some first.
-          </p>
+          <Button
+            onClick={greet}
+            className="mb-4 w-full"
+            disabled={suggestLoading}
+            variant="cyberpunk"
+          >
+            {suggestLoading ? (
+              "Processing Request..."
+            ) : (
+              <>
+                <Sparkles size={16} className="mr-2" />
+                Generate Suggestions
+              </>
+            )}
+          </Button>
         )}
+
+        {/* Suggested Messages */}
+        <div className="border-cyan-800/40 border rounded-md mt-4 p-3 bg-slate-800/40">
+          <h3 className="text-cyan-400 mb-2 font-medium">Suggestion Matrix</h3>
+          {suggestLoading ? (
+            <div className="text-center py-4 text-cyan-300">
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-r-2 border-cyan-500 border-b-2 border-transparent"></div>
+              <p className="mt-2">Generating cyberpunk messages...</p>
+            </div>
+          ) : suggestedMessages.length > 0 ? (
+            suggestedMessages.map((message, index) => (
+              <div
+                key={index}
+                onClick={() => copyToMessageArea(message)}
+                className="border border-cyan-800/30 rounded-md p-2 m-2 bg-slate-900/60 cursor-pointer hover:bg-slate-800/60 transition text-cyan-100 hover:border-cyan-600/50"
+              >
+                {message}
+              </div>
+            ))
+          ) : (
+            <p className="text-slate-400 px-2 py-1">
+              No suggestions available. Generate some first.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
