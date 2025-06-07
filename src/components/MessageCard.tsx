@@ -3,10 +3,7 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
 import {
@@ -21,12 +18,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
-import { X } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Message } from "@/model/User";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
-import dayjs from 'dayjs';
+import { formatDistanceToNow } from "date-fns";
 
 
 type MessageCardProps = {
@@ -37,52 +34,66 @@ type MessageCardProps = {
 const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
   const { toast } = useToast();
 
-  const handleDeleteConfirm = async () => {
-    const response = await axios.delete<ApiResponse>(
-      `/api/delete-message/${message._id as string}`
-    );
-
-    toast({
-        title: response.data.message,
-    })
-    onMessageDelete(message._id as string);
+  const handleDelete = async () => {
+    try {
+      await axios.delete<ApiResponse>(`/api/delete-message/${message._id}`);
+      onMessageDelete(message._id as string);
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed from your inbox.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete message",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <Card className="card-bordered">
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>{message.content}</CardTitle>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant='destructive'>
-                <X className="w-5 h-5" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  this message.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteConfirm}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+    <Card className="border-cyan-800/40 bg-slate-900/80 backdrop-blur-sm overflow-hidden">
+      <CardContent className="p-4 pt-4">
+        <div className="border-l-4 border-cyan-500 pl-3 mb-3">
+          <div className="text-xs text-cyan-400">
+            {message.createdAt
+              ? formatDistanceToNow(new Date(message.createdAt), {
+                  addSuffix: true,
+                })
+              : "Time unknown"}
+          </div>
         </div>
-        <div className="text-sm">
-          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
-        </div>
-      </CardHeader>
-      <CardContent></CardContent>
+        <p className="text-cyan-100 font-medium mb-2">{message.content}</p>
+      </CardContent>
+      <CardFooter className="bg-slate-800/40 p-3 flex justify-end">
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-red-900/20">
+              <Trash2 className="h-4 w-4 mr-1" />
+              Delete
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-slate-900 border-cyan-800/40">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-cyan-300">Confirm Deletion</AlertDialogTitle>
+              <AlertDialogDescription className="text-cyan-100">
+                Are you sure you want to delete this message? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-transparent border border-cyan-700/40 text-cyan-300 hover:bg-cyan-900/30">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-900/50 text-red-200 border border-red-700/50 hover:bg-red-800/60"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </CardFooter>
     </Card>
   );
 };
