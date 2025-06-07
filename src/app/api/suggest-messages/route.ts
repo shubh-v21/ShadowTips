@@ -6,12 +6,14 @@ const userRequestData: Record<string, { count: number; timestamp: number }> =
   {};
 
 export async function POST(request: Request) {
-  console.log(request);
-  
   const ip = request.headers.get("x-forwarded-for") || "unknown";
   const currentTime = Date.now();
   const LOCK_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
   const MAX_REQUESTS = 1000;
+  
+  // Get parameters from request
+  const body = await request.json();
+  const { tone = "neutral", topic = "digital", niche = "digital-identity", recipient = "user" } = body;
 
   if (!userRequestData[ip]) {
     userRequestData[ip] = { count: 0, timestamp: 0 };
@@ -41,8 +43,52 @@ export async function POST(request: Request) {
       model: "gemini-2.0-flash-lite-preview-02-05",
     });
 
-    const prompt =
-      "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.";
+    // Tone descriptions
+    const toneDescriptions = {
+      neutral: "straightforward, balanced",
+      mysterious: "enigmatic, intriguing, leaving things unsaid",
+      cryptic: "coded, hidden meanings, symbolic",
+      friendly: "warm, approachable, inviting conversation",
+      philosophical: "deep, thought-provoking, existential"
+    };
+
+    // Topic descriptions
+    const topicDescriptions = {
+      digital: "digital reality, online experiences, virtual connections",
+      future: "future technologies, predictions, possible worlds",
+      society: "social impacts of technology, digital communities, online culture",
+      personal: "individual experiences in the digital age, digital identity",
+      abstract: "abstract concepts, theoretical ideas, metaphysical questions"
+    };
+
+    // Niche descriptions
+    const nicheDescriptions = {
+      cybersecurity: "digital security, hacking, data protection, privacy",
+      ai: "artificial intelligence, machine consciousness, human-AI relationships",
+      "digital-identity": "online personas, digital footprints, virtual presence",
+      "virtual-reality": "immersive experiences, simulated worlds, digital escape",
+      "tech-ethics": "moral implications of technology, ethical dilemmas in the digital age"
+    };
+
+    // Build customized prompt based on parameters
+    const prompt = `Create a list of three thought-provoking questions formatted as a single string with each question separated by '||'. 
+
+These questions should be for an anonymous messaging platform called SHADOWTIPS with a cyberpunk aesthetic. 
+
+Craft the questions with these specific parameters:
+- Tone: ${toneDescriptions[tone as keyof typeof toneDescriptions]}
+- Topic domain: ${topicDescriptions[topic as keyof typeof topicDescriptions]}
+- Tech niche: ${nicheDescriptions[niche as keyof typeof nicheDescriptions]}
+- They should be directed to someone with username "${recipient}"
+
+The questions should reflect a futuristic digital world where technology, identity, and reality intersect. Use cyberpunk-inspired language with references to networks, digital shadows, encryption, virtual spaces, or technological concepts.
+
+Examples of the style I'm looking for:
+- "Have you ever wondered if your digital shadow knows more about you than you know about yourself?"
+- "In a world where memories can be encrypted, which of yours would you lock away forever?"
+- "If you could upload your consciousness to the net, would you still consider yourself human?"
+
+Format your response strictly as three questions separated by the || delimiter without any additional text.`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -51,7 +97,7 @@ export async function POST(request: Request) {
     userData.count++;
     userData.timestamp = currentTime;
 
-    return NextResponse.json({ message , disabled: false });
+    return NextResponse.json({ message, disabled: false });
   } catch (error) {
     console.error("Gemini API Error:", error);
     return NextResponse.json(
