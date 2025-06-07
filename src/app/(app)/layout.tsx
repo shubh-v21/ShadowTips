@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ShadowTips",
-  description: "Real feedback from real people.",
+  title: "SHADOWTIPS",
+  description: "Digital anonymity protocol for secure communications.",
 };
 
 export default function RootLayout({
@@ -23,13 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    //<html lang="en">
-
-    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <div className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900`}>
       <Navbar />
-      {children}
+      <div className="min-h-[calc(100vh-64px)]">{children}</div>
     </div>
-
-    //</html>
   );
 }
