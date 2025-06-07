@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "True Feedback",
+  title: "ShadowTips",
   description: "Real feedback from real people.",
 };
 
